@@ -24,9 +24,11 @@ function showRandomQuote() {
   quoteDisplay.innerHTML = `"${randomQuote.text}" - Category: ${randomQuote.category}`;
 }
 
-function addQuote() {
-  const newCategory = document.getElementById("newQuoteCategory").value.trim();
-  const newText = document.getElementById("newQuoteText").value.trim();
+function createAddQuoteForm() {
+  const formContainer = document.getElementById("formContainer");
+
+  // Clear previous form (if any)
+  formContainer.innerHTML = "";
   // Create form elements
   const form = document.createElement("form");
   const quoteInput = document.createElement("input");
@@ -50,24 +52,26 @@ function addQuote() {
   form.appendChild(categoryInput);
   form.appendChild(submitButton);
   formContainer.appendChild(form);
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-  if (newText === "" || newCategory === "") {
-    alert("Enter a quote");
-  }
-  quotes.push({ text: newText, category: newCategory });
+    const newText = document.getElementById("quoteText").value;
+    const newCategory = document.getElementById("quoteCategory").value;
+    if (newText === "" || newCategory === "") {
+      alert("Enter a quote");
+    }
+    quotes.push({ text: newText, category: newCategory });
 
-  document.getElementById("newQuoteText").value = "";
-  document.getElementById("newQuoteCategory").value = "";
+    document.getElementById("quoteText").value = "";
+    document.getElementById("quoteCategory").value = "";
+
+    alert("Quote added successfully");
+  });
 }
 
 document.addEventListener("DOMContentLoaded", function () {
   showRandomQuote();
   const showQuote = document.getElementById("newQuote");
   showQuote.addEventListener("click", showRandomQuote);
+  createAddQuoteForm();
 });
-function createAddQuoteForm() {
-  arrayOfQuote = {
-    text: newText,
-    category: newCategory,
-  };
-}
