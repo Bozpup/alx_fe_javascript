@@ -27,6 +27,29 @@ function showRandomQuote() {
 function addQuote() {
   const newCategory = document.getElementById("newQuoteCategory").value.trim();
   const newText = document.getElementById("newQuoteText").value.trim();
+  // Create form elements
+  const form = document.createElement("form");
+  const quoteInput = document.createElement("input");
+  const categoryInput = document.createElement("input");
+  const submitButton = document.createElement("button");
+
+  // Set attributes for the input elements
+  quoteInput.type = "text";
+  quoteInput.placeholder = "Enter quote text";
+  quoteInput.id = "quoteText";
+
+  categoryInput.type = "text";
+  categoryInput.placeholder = "Enter category";
+  categoryInput.id = "quoteCategory";
+
+  submitButton.textContent = "Add Quote";
+  submitButton.type = "submit";
+
+  // Append inputs and button to the form
+  form.appendChild(quoteInput);
+  form.appendChild(categoryInput);
+  form.appendChild(submitButton);
+  formContainer.appendChild(form);
 
   if (newText === "" || newCategory === "") {
     alert("Enter a quote");
