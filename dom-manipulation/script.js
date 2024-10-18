@@ -131,6 +131,85 @@ function createAddQuoteForm() {
   });
 }
 
+const SERVER_URL = "https://jsonplaceholder.typicode.com/posts"; // Mock API endpoint
+
+// Fetch quotes from the mock server
+async function fetchQuotesFromServer() {
+  try {
+    const response = await fetch(SERVER_URL);
+    const data = await response.json();
+    return data.map((item) => ({
+      text: item.title, // Simulating quote text
+      category: item.body.substring(0, 10), // Simulating category from body (just an example)
+    }));
+  } catch (error) {
+    console.error("Error fetching quotes:", error);
+    return [];
+  }
+}
+
+// Periodically fetch new quotes
+setInterval(async () => {
+  const newQuotes = await fetchQuotesFromServer();
+  if (newQuotes.length > 0) {
+    console.log("New quotes fetched from server:", newQuotes);
+    syncQuotes(newQuotes);
+  }
+}, 10000);
+
+function syncQuotes(newQuotes) {
+  newQuotes.forEach((newQuote) => {
+    const existingQuoteIndex = quotes.findIndex(
+      (quote) => quote.text === newQuote.text
+    );
+    if (existingQuoteIndex === -1) {
+      // Add new quote if it doesn't exist
+      quotes.push(newQuote);
+      console.log(`Added new quote: ${newQuote.text}`);
+    } else {
+      // If it exists, you can implement logic to resolve conflicts if needed
+      console.log(`Conflict detected for quote: ${newQuote.text}`);
+      // Here you can decide to keep the existing one or update it
+      // For simplicity, we prioritize the new quote from the server
+      quotes[existingQuoteIndex] = newQuote;
+    }
+  });
+  saveDataToLocalStorage(); // Save updated quotes
+}
+
+function notifyUser(message) {
+  const notification = document.createElement("div");
+  notification.innerText = message;
+  notification.style.position = "fixed";
+  notification.style.top = "10px";
+  notification.style.right = "10px";
+  notification.style.backgroundColor = "lightyellow";
+  notification.style.padding = "10px";
+  notification.style.border = "1px solid #ccc";
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
+}
+
+// Modify syncQuotes function to notify user of updates
+function syncQuotes(newQuotes) {
+  newQuotes.forEach((newQuote) => {
+    const existingQuoteIndex = quotes.findIndex(
+      (quote) => quote.text === newQuote.text
+    );
+    if (existingQuoteIndex === -1) {
+      quotes.push(newQuote);
+      notifyUser(`Added new quote: ${newQuote.text}`);
+    } else {
+      notifyUser(`Conflict detected for quote: ${newQuote.text}`);
+      quotes[existingQuoteIndex] = newQuote; // Resolve conflict by updating
+    }
+  });
+  saveDataToLocalStorage();
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   populateCategories();
   const categoryFilter = document.getElementById("categoryFilter");
