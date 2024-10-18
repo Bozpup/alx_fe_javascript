@@ -79,6 +79,7 @@ function syncQuotes(newQuotes) {
     }
   });
   saveDataToLocalStorage(); // Save updated quotes
+  notifyUser("Quotes synced with server!"); // Notify that quotes have been synced
 }
 
 // Notify user with a message
@@ -91,6 +92,7 @@ function notifyUser(message) {
   notification.style.backgroundColor = "lightyellow";
   notification.style.padding = "10px";
   notification.style.border = "1px solid #ccc";
+  notification.style.zIndex = "1000"; // Make sure it's on top of other elements
   document.body.appendChild(notification);
 
   setTimeout(() => {
