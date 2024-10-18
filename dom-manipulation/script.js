@@ -98,7 +98,7 @@ function importFromJsonFile(event) {
       // Validate that the uploaded data is an array of quotes
       if (Array.isArray(importedQuotes)) {
         quotes.push(...importedQuotes);
-        saveQuotesToLocalStorage();
+        saveQuoteToLocalStorage();
         alert("Quotes imported successfully!");
       } else {
         alert("Invalid file format. Please upload a valid JSON file.");
