@@ -1,4 +1,4 @@
-const quotes = [
+let quotes = JSON.parse(localStorage.getItem("quptes")) || [
   {
     text: "The greatest glory in living lies not in never falling, but in rising every time we fall.",
     category: "Inspiration",
@@ -14,6 +14,10 @@ const quotes = [
     category: "Courage",
   },
 ];
+
+function saveQuoteToLocalStorage() {
+  localStorage.setItem("quotes", JSON.stringify(quotes));
+}
 
 function showRandomQuote() {
   const randomIndex = Math.floor(Math.random() * quotes.length);
@@ -61,6 +65,7 @@ function createAddQuoteForm() {
       alert("Enter a quote");
     }
     quotes.push({ text: newText, category: newCategory });
+    saveQuoteToLocalStorage();
 
     document.getElementById("quoteText").value = "";
     document.getElementById("quoteCategory").value = "";
@@ -68,10 +73,49 @@ function createAddQuoteForm() {
     alert("Quote added successfully");
   });
 }
+function exportQuotesToJSON() {
+  const dataStr = JSON.stringify(quotes, null, 2); // Convert quotes to a JSON string with formatting
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const downloadLink = document.createElement("a");
+  downloadLink.href = url;
+  downloadLink.download = "quotes.json"; // Set the name of the downloaded file
+  downloadLink.click();
+
+  // Clean up the URL object
+  URL.revokeObjectURL(url);
+}
+
+function importFromJsonFile(event) {
+  const fileReader = new FileReader();
+
+  fileReader.onload = function (event) {
+    try {
+      // Parse the uploaded JSON file
+      const importedQuotes = JSON.parse(event.target.result);
+
+      // Validate that the uploaded data is an array of quotes
+      if (Array.isArray(importedQuotes)) {
+        quotes.push(...importedQuotes);
+        saveQuotesToLocalStorage();
+        alert("Quotes imported successfully!");
+      } else {
+        alert("Invalid file format. Please upload a valid JSON file.");
+      }
+    } catch (error) {
+      alert("Error reading file. Please upload a valid JSON file.");
+    }
+  };
+
+  fileReader.readAsText(event.target.files[0]);
+}
 
 document.addEventListener("DOMContentLoaded", function () {
   showRandomQuote();
   const showQuote = document.getElementById("newQuote");
   showQuote.addEventListener("click", showRandomQuote);
   createAddQuoteForm();
+  const exportButton = document.getElementById("exportQuotes");
+  exportButton.addEventListener("click", exportQuotesToJSON);
 });
