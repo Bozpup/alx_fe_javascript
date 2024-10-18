@@ -15,7 +15,7 @@ const quotes = [
   },
 ];
 
-function displayRandomQuote() {
+function showRandomQuote() {
   const randomIndex = Math.floor(Math.random() * quotes.length);
   const randomQuote = quotes[randomIndex];
 
@@ -38,9 +38,9 @@ function addQuote() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  displayRandomQuote();
+  showRandomQuote();
   const showQuote = document.getElementById("newQuote");
-  showQuote.addEventListener("click", displayRandomQuote);
+  showQuote.addEventListener("click", showRandomQuote);
 });
 function createAddQuoteForm() {
   arrayOfQuote = {
